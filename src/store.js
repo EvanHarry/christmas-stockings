@@ -35,7 +35,7 @@ export default new Vuex.Store({
       commit('startLoading')
 
       try {
-        const { data } = await axios.post('/token', { username, password })
+        const { data } = await axios.post('/auth/token', { username, password })
         const user = decode(data.token)
 
         localStorage.setItem('token', data.token)
@@ -44,25 +44,13 @@ export default new Vuex.Store({
       } catch (e) {
         commit('stopLoading')
 
-        if (e.response) {
-          let error = ''
-
-          switch (e.response.status) {
-            case 401:
-              error = 'Bad credentials'
-              break
-
-            case 404:
-              error = 'User not found'
-              break
-
-            default:
-              break
-          }
-
-          throw new Error(error)
-        }
+        throw e.response
       }
+    },
+    logout ({ commit }, router) {
+      localStorage.removeItem('token')
+      commit('logout')
+      router.push('/login')
     }
   }
 })

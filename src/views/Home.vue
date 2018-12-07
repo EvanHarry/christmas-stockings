@@ -35,8 +35,8 @@ export default {
   data () {
     return {
       headers: [
-        { text: 'Supplier Code', value: 'supplier-code', sortable: true },
-        { text: 'Tidings Code', value: 'tidings-code', sortable: true },
+        { text: 'Supplier Code', value: 'supplier_code', sortable: true },
+        { text: 'Tidings Code', value: 'tidings_code', sortable: true },
         { text: 'Supplier', value: 'supplier', sortable: true },
         { text: 'Location', value: 'location', sortable: true },
         { text: 'Quantity', value: 'quantity', sortable: true }
@@ -45,8 +45,8 @@ export default {
       loading: false,
       searchCategory: null,
       searchItems: [
-        { text: 'Supplier Code', value: 'supplier-code' },
-        { text: 'Tidings Code', value: 'tidings-code' },
+        { text: 'Supplier Code', value: 'supplier_code' },
+        { text: 'Tidings Code', value: 'tidings_code' },
         { text: 'Supplier', value: 'supplier' }
       ],
       searchSupplier: '',

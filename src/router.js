@@ -52,6 +52,8 @@ const authMiddleware = (router) => {
     } else if (to.name === 'login') {
       if (token && !isTokenExpired(token)) {
         next({ path: '/' })
+      } else {
+        next()
       }
     } else {
       next()

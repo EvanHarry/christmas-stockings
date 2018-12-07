@@ -3,7 +3,7 @@ import Vue from 'vue'
 import axios from 'axios'
 
 // Axios plugin
-const dev = ''
+const dev = 'http://localhost:5000'
 const production = ''
 axios.defaults.baseURL = (process.env.NODE_ENV !== 'production') ? dev : production
 
