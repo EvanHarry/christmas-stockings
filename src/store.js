@@ -18,6 +18,10 @@ export default new Vuex.Store({
   },
   mutations: {
     login (state, user) {
+      const token = localStorage.getItem('token')
+
+      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
+
       state.user = user
     },
     logout (state) {
@@ -35,10 +39,11 @@ export default new Vuex.Store({
       commit('startLoading')
 
       try {
-        const { data } = await axios.post('/auth/token', { username, password })
+        const { data } = await axios.post('/auth/token/', { username, password })
         const user = decode(data.token)
 
         localStorage.setItem('token', data.token)
+
         commit('login', user)
         commit('stopLoading')
       } catch (e) {

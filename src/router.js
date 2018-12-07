@@ -39,7 +39,7 @@ const authMiddleware = (router) => {
         next({ path: '/login' })
       } else {
         if (isTokenExpired(token)) {
-          store.dispatch('logout')
+          store.dispatch('logout', router)
 
           next({ path: '/login' })
         } else {
