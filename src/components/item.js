@@ -1,13 +1,8 @@
 export default {
-  data () {
-    return {
-      fields: [
-        { label: 'Supplier Code', placeholder: '#####', rules: ['required'], value: 'supplier_code' },
-        { label: 'Tidings Code', placeholder: '#####', rules: ['required'], value: 'tidings_code' },
-        { label: 'Supplier', placeholder: '#####', rules: ['required'], value: 'supplier' },
-        { label: 'Location', placeholder: '#####', rules: ['required'], value: 'location' },
-        { label: 'Quantity', placeholder: '#####', rules: ['number', 'required'], value: 'quantity' }
-      ]
+  props: {
+    fields: {
+      type: Array,
+      required: true
     }
   },
   methods: {
