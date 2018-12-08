@@ -140,10 +140,14 @@ export default {
       this.loading = true
       let id = this.item.id
 
-      await this.removeItem(id)
+      try {
+        await this.removeItem(id)
 
-      this.loading = false
-      this.active = false
+        this.loading = false
+        this.active = false
+      } catch (e) {
+        this.loading = false
+      }
     },
     async update () {
       this.loading = true

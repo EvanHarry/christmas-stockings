@@ -73,6 +73,8 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 import EditItem from '@/components/EditItem'
 import NewItem from '@/components/NewItem'
 
@@ -99,6 +101,11 @@ export default {
       items: [],
       loading: false
     }
+  },
+  computed: {
+    ...mapState([
+      'user'
+    ])
   },
   mounted () {
     this.getUsers()
@@ -130,12 +137,21 @@ export default {
       }
     },
     async removeItem (id) {
-      await this.$axios.delete(`/users/${id}/`)
+      try {
+        await this.$axios.delete(`/users/${id}/`)
 
-      let i = this.items
-        .findIndex(m => m.id === id)
+        let i = this.items
+          .findIndex(m => m.id === id)
 
-      this.items.splice(i, 1)
+        this.items.splice(i, 1)
+      } catch (e) {
+        this.alert = {
+          msg: 'Error deleting user.',
+          value: true
+        }
+
+        throw new Error()
+      }
     },
     async updateItem (item) {
       try {

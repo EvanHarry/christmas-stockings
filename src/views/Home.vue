@@ -11,7 +11,7 @@
           dark
           dense
         >
-          <v-toolbar-title>Results</v-toolbar-title>
+          <v-toolbar-title>Stock</v-toolbar-title>
         </v-toolbar>
         <v-data-table
           :headers="headers"
@@ -52,7 +52,7 @@
           dark
           dense
         >
-          <v-toolbar-title>Stock</v-toolbar-title>
+          <v-toolbar-title>Search</v-toolbar-title>
         </v-toolbar>
         <v-card-text>
           <v-select
@@ -211,12 +211,21 @@ export default {
       }
     },
     async removeItem (id) {
-      await this.$axios.delete(`/stock/${id}/`)
+      try {
+        await this.$axios.delete(`/stock/${id}/`)
 
-      let i = this.items
-        .findIndex(m => m.id === id)
+        let i = this.items
+          .findIndex(m => m.id === id)
 
-      this.items.splice(i, 1)
+        this.items.splice(i, 1)
+      } catch (e) {
+        this.alert = {
+          msg: 'Error deleting stock item.',
+          value: true
+        }
+
+        throw new Error()
+      }
     },
     async updateItem (item) {
       try {
