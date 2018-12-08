@@ -19,6 +19,13 @@
           <v-icon>home</v-icon>
         </v-btn>
         <v-btn
+          v-if="admin"
+          icon
+          @click="$router.push('/users')"
+        >
+          <v-icon>supervisor_account</v-icon>
+        </v-btn>
+        <v-btn
           icon
           @click="logout($router)"
         >
@@ -43,13 +50,9 @@ import { mapActions, mapGetters } from 'vuex'
 
 export default {
   name: 'App',
-  data () {
-    return {
-      //
-    }
-  },
   computed: {
     ...mapGetters([
+      'admin',
       'loggedIn'
     ])
   },

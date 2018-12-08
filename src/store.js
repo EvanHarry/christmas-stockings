@@ -12,6 +12,9 @@ export default new Vuex.Store({
     user: null
   },
   getters: {
+    admin (state) {
+      return state.user ? state.user.admin : false
+    },
     loggedIn (state) {
       return !!state.user
     }
