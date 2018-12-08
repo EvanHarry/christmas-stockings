@@ -97,7 +97,7 @@
 </template>
 
 <script>
-import item from './item'
+import item from '@/mixins/item'
 
 export default {
   name: 'edit-item',
@@ -105,6 +105,10 @@ export default {
     item
   ],
   props: {
+    fields: {
+      type: Array,
+      required: true
+    },
     item: {
       type: Object,
       required: true

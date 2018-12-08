@@ -76,7 +76,7 @@
 </template>
 
 <script>
-import item from './item'
+import item from '@/mixins/item'
 
 export default {
   name: 'new-item',
@@ -84,6 +84,10 @@ export default {
     item
   ],
   props: {
+    fields: {
+      type: Array,
+      required: true
+    },
     saveItem: {
       type: Function,
       required: true

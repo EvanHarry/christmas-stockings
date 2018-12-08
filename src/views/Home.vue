@@ -54,44 +54,51 @@
         >
           <v-toolbar-title>Search</v-toolbar-title>
         </v-toolbar>
-        <v-card-text>
-          <v-select
-            v-model="searchCategory"
-            :items="searchItems"
-            label="Search Category"
-            placeholder="None"
-          />
-          <v-text-field
-            v-if="searchCode"
-            v-model="searchText"
-            :disabled="!searchCategory"
-            clearable
-            hide-details
-            label="Search Text"
-            placeholder="Search item..."
-          />
-          <v-select
-            v-else
-            v-model="searchSupplier"
-            :items="suppliers"
-            hide-details
-            label="Search Supplier"
-            placeholder="Search item..."
-          />
-        </v-card-text>
-        <v-card-actions>
-          <v-btn
-            :disabled="loading || !searchValid"
-            :loading="loading"
-            block
-            color="purple white--text"
-            depressed
-            @click="load"
-          >
-            <span>Make it snow</span>
-            <span slot="loader">Hold on for deer life</span>
-          </v-btn>
-        </v-card-actions>
+        <v-form
+          ref="form"
+          v-model="valid"
+          @submit="load"
+        >
+          <v-card-text>
+            <v-select
+              v-model="searchCategory"
+              :items="searchItems"
+              label="Search Category"
+              placeholder="None"
+            />
+            <v-text-field
+              v-if="searchCode"
+              v-model="searchText"
+              :disabled="!searchCategory"
+              :hide-details="valid"
+              :rules="getRules(['url-safe'])"
+              clearable
+              label="Search Text"
+              placeholder="Search item..."
+            />
+            <v-select
+              v-else
+              v-model="searchSupplier"
+              :items="suppliers"
+              hide-details
+              label="Search Supplier"
+              placeholder="Search item..."
+            />
+          </v-card-text>
+          <v-card-actions>
+            <v-btn
+              :disabled="loading || !searchValid || !valid"
+              :loading="loading"
+              block
+              color="purple white--text"
+              depressed
+              type="submit"
+            >
+              <span>Make it snow</span>
+              <span slot="loader">Hold on for deer life</span>
+            </v-btn>
+          </v-card-actions>
+        </v-form>
       </v-card>
     </v-flex>
     <v-snackbar
@@ -120,6 +127,7 @@
 <script>
 import EditItem from '@/components/EditItem'
 import NewItem from '@/components/NewItem'
+import item from '@/mixins/item'
 
 export default {
   name: 'home',
@@ -127,6 +135,9 @@ export default {
     EditItem,
     NewItem
   },
+  mixins: [
+    item
+  ],
   data () {
     return {
       alert: {
@@ -134,9 +145,9 @@ export default {
         value: false
       },
       fields: [
-        { label: 'Supplier Code', placeholder: '#####', rules: [], value: 'supplier_code', text: true },
-        { label: 'Tidings Code', placeholder: '#####', rules: [], value: 'tidings_code', text: true },
-        { label: 'Supplier', placeholder: '#####', rules: ['required'], value: 'supplier', text: true },
+        { label: 'Supplier Code', placeholder: '#####', rules: ['url-safe'], value: 'supplier_code', text: true },
+        { label: 'Tidings Code', placeholder: '#####', rules: ['url-safe'], value: 'tidings_code', text: true },
+        { label: 'Supplier', placeholder: '#####', rules: ['required', 'url-safe'], value: 'supplier', text: true },
         { label: 'Location', placeholder: '#####', rules: ['required'], value: 'location', text: true },
         { label: 'Quantity', placeholder: '#####', rules: ['number', 'required'], value: 'quantity', text: true }
       ],
@@ -157,7 +168,8 @@ export default {
       ],
       searchSupplier: '',
       searchText: '',
-      suppliers: []
+      suppliers: [],
+      valid: false
     }
   },
   computed: {
@@ -189,10 +201,14 @@ export default {
       let category = this.searchCategory
       let text = category === 'supplier' ? this.searchSupplier : this.searchText
 
-      const { data } = await this.$axios.get(`/search/${category}/${text}/`)
-      this.items = data
+      try {
+        const { data } = await this.$axios.get(`/search/${category}/${encodeURIComponent(text)}/`)
+        this.items = data
 
-      this.loading = false
+        this.loading = false
+      } catch (e) {
+        this.loading = false
+      }
     },
     async createItem (item) {
       try {
