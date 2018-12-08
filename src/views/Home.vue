@@ -115,11 +115,11 @@ export default {
   data () {
     return {
       fields: [
-        { label: 'Supplier Code', placeholder: '#####', rules: ['required'], value: 'supplier_code' },
-        { label: 'Tidings Code', placeholder: '#####', rules: ['required'], value: 'tidings_code' },
-        { label: 'Supplier', placeholder: '#####', rules: ['required'], value: 'supplier' },
-        { label: 'Location', placeholder: '#####', rules: ['required'], value: 'location' },
-        { label: 'Quantity', placeholder: '#####', rules: ['number', 'required'], value: 'quantity' }
+        { label: 'Supplier Code', placeholder: '#####', rules: ['required'], value: 'supplier_code', text: true },
+        { label: 'Tidings Code', placeholder: '#####', rules: ['required'], value: 'tidings_code', text: true },
+        { label: 'Supplier', placeholder: '#####', rules: ['required'], value: 'supplier', text: true },
+        { label: 'Location', placeholder: '#####', rules: ['required'], value: 'location', text: true },
+        { label: 'Quantity', placeholder: '#####', rules: ['number', 'required'], value: 'quantity', text: true }
       ],
       headers: [
         { text: 'Supplier Code', value: 'supplier_code', sortable: true },

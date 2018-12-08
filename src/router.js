@@ -4,8 +4,9 @@ import Router from 'vue-router'
 import store from '@/store'
 import { getTokenBody, isTokenExpired } from '@/assets/auth'
 
-import Home from './views/Home.vue'
-import Login from './views/Login.vue'
+import Home from '@/views/Home.vue'
+import Users from '@/views/Users.vue'
+import Login from '@/views/Login.vue'
 
 Vue.use(Router)
 
@@ -20,12 +21,18 @@ let router = new Router({
       }
     },
     {
+      path: '/users',
+      name: 'users',
+      component: Users,
+      meta: {
+        admin: true,
+        auth: true
+      }
+    },
+    {
       path: '/login',
       name: 'login',
-      component: Login,
-      meta: {
-        auth: false
-      }
+      component: Login
     }
   ]
 })
@@ -61,6 +68,21 @@ const authMiddleware = (router) => {
   })
 }
 
+export const adminMiddleware = (router) => {
+  router.beforeEach((to, from, next) => {
+    if (to.matched.some(record => record.meta.admin)) {
+      if (store.getters['admin']) {
+        next()
+      } else {
+        next({ path: '/' })
+      }
+    } else {
+      next()
+    }
+  })
+}
+
 authMiddleware(router)
+adminMiddleware(router)
 
 export default router

@@ -36,14 +36,26 @@
         @submit="update"
       >
         <v-card-text>
-          <v-text-field
+          <div
             v-for="(item, i) in fields"
-            v-model="editItem[item.value]"
             :key="i"
-            :label="item.label"
-            :placeholder="item.placeholder"
-            :rules="getRules(item.rules)"
-          />
+          >
+            <v-text-field
+              v-if="item.text"
+              v-model="editItem[item.value]"
+              :label="item.label"
+              :placeholder="item.placeholder"
+              :rules="getRules(item.rules)"
+            />
+            <v-checkbox
+              v-if="item .bool"
+              v-model="editItem[item.value]"
+              class="mt-0"
+              color="blue"
+              hide-details
+              label="Admin"
+            />
+          </div>
         </v-card-text>
         <v-card-actions>
           <v-btn
