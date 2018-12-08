@@ -112,10 +112,14 @@ export default {
       this.loading = true
       let data = this.newItem
 
-      await this.saveItem(data)
+      try {
+        await this.saveItem(data)
 
-      this.loading = false
-      this.active = false
+        this.loading = false
+        this.active = false
+      } catch (e) {
+        this.loading = false
+      }
     }
   }
 }

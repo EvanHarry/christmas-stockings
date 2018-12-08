@@ -94,6 +94,21 @@
         </v-card-actions>
       </v-card>
     </v-flex>
+    <v-snackbar
+      v-model="alert.value"
+      bottom
+      color="grey darken-3"
+    >
+      <span>{{ alert.msg }}</span>
+      <v-btn
+        color="white"
+        flat
+        icon
+        @click="alert.value = false"
+      >
+        <v-icon>close</v-icon>
+      </v-btn>
+    </v-snackbar>
     <new-item
       :fields="fields"
       :save-item="createItem"
@@ -114,6 +129,10 @@ export default {
   },
   data () {
     return {
+      alert: {
+        msg: '',
+        value: false
+      },
       fields: [
         { label: 'Supplier Code', placeholder: '#####', rules: ['required'], value: 'supplier_code', text: true },
         { label: 'Tidings Code', placeholder: '#####', rules: ['required'], value: 'tidings_code', text: true },
@@ -176,10 +195,20 @@ export default {
       this.loading = false
     },
     async createItem (item) {
-      let quantity = parseInt(item.quantity)
+      try {
+        let quantity = parseInt(item.quantity)
 
-      await this.$axios.post('/stock/', { ...item, quantity: quantity })
-      await this.getSuppliers()
+        await this.$axios.post('/stock/', { ...item, quantity: quantity })
+
+        this.alert = {
+          msg: 'Created stock item.',
+          value: true
+        }
+
+        await this.getSuppliers()
+      } catch (e) {
+        throw new Error()
+      }
     },
     async removeItem (id) {
       await this.$axios.delete(`/stock/${id}/`)
@@ -190,15 +219,24 @@ export default {
       this.items.splice(i, 1)
     },
     async updateItem (item) {
-      let quantity = parseInt(item.quantity)
+      try {
+        let quantity = parseInt(item.quantity)
 
-      const { data } = await this.$axios.put(`/stock/${item.id}/`, { ...item, quantity: quantity })
+        const { data } = await this.$axios.put(`/stock/${item.id}/`, { ...item, quantity: quantity })
 
-      let i = this.items
-        .findIndex(m => m.id === item.id)
+        let i = this.items
+          .findIndex(m => m.id === item.id)
 
-      this.items.splice(i, 1)
-      this.items.push(data)
+        this.items.splice(i, 1)
+        this.items.push(data)
+      } catch (e) {
+        this.alert = {
+          msg: 'Error updating stock item.',
+          value: true
+        }
+
+        throw new Error()
+      }
     }
   }
 }

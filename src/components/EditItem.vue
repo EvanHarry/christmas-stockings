@@ -136,10 +136,14 @@ export default {
       this.loading = true
       let data = this.editItem
 
-      await this.refresh(data)
+      try {
+        await this.refresh(data)
 
-      this.loading = false
-      this.active = false
+        this.loading = false
+        this.active = false
+      } catch (e) {
+        this.loading = false
+      }
     }
   }
 }
