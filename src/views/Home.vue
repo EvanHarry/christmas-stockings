@@ -12,6 +12,16 @@
           dense
         >
           <v-toolbar-title>Stock</v-toolbar-title>
+          <v-spacer />
+          <v-toolbar-title
+            v-if="stockCount"
+            class="body-2"
+          >Total Items - {{ stockCount }}</v-toolbar-title>
+          <v-progress-circular
+            v-else
+            indeterminate
+            size="28"
+          />
         </v-toolbar>
         <v-data-table
           :headers="headers"
@@ -168,6 +178,7 @@ export default {
       ],
       searchSupplier: '',
       searchText: '',
+      stockCount: '',
       suppliers: [],
       valid: false
     }
@@ -186,14 +197,19 @@ export default {
       this.searchText = ''
     }
   },
-  mounted () {
-    this.getSuppliers()
+  async mounted () {
+    await this.getSuppliers()
+    await this.getStockCount()
   },
   methods: {
     async getSuppliers () {
       const { data } = await this.$axios.get('/suppliers/')
 
       this.suppliers = data
+    },
+    async getStockCount () {
+      const { data } = await this.$axios.get('/stock/statistics/')
+      this.stockCount = data.count
     },
     async load () {
       this.loading = true
@@ -221,7 +237,8 @@ export default {
           value: true
         }
 
-        await this.getSuppliers()
+        this.getSuppliers()
+        this.getStockCount()
       } catch (e) {
         throw new Error()
       }
@@ -234,6 +251,9 @@ export default {
           .findIndex(m => m.id === id)
 
         this.items.splice(i, 1)
+
+        this.getSuppliers()
+        this.getStockCount()
       } catch (e) {
         this.alert = {
           msg: 'Error deleting stock item.',
@@ -254,6 +274,8 @@ export default {
 
         this.items.splice(i, 1)
         this.items.push(data)
+
+        this.getSuppliers()
       } catch (e) {
         this.alert = {
           msg: 'Error updating stock item.',
