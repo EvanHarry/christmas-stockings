@@ -23,6 +23,7 @@
         <v-toolbar-title>Edit Stock</v-toolbar-title>
         <v-spacer />
         <v-btn
+          :disabled="loading"
           icon
           @click="remove"
         >
@@ -41,7 +42,7 @@
             :key="i"
             :label="item.label"
             :placeholder="item.placeholder"
-            :rules="$data[item.rules]"
+            :rules="getRules(item.rules)"
           />
         </v-card-text>
         <v-card-actions>
@@ -91,21 +92,14 @@ export default {
     return {
       active: false,
       items: [
-        { label: 'Supplier Code', placeholder: '#####', rules: 'textRules', value: 'supplier_code' },
-        { label: 'Tidings Code', placeholder: '#####', rules: 'textRules', value: 'tidings_code' },
-        { label: 'Supplier', placeholder: '#####', rules: 'textRules', value: 'supplier' },
-        { label: 'Location', placeholder: '#####', rules: 'textRules', value: 'location' },
-        { label: 'Quantity', placeholder: '#####', rules: 'numberRules', value: 'quantity' }
+        { label: 'Supplier Code', placeholder: '#####', rules: ['required'], value: 'supplier_code' },
+        { label: 'Tidings Code', placeholder: '#####', rules: ['required'], value: 'tidings_code' },
+        { label: 'Supplier', placeholder: '#####', rules: ['required'], value: 'supplier' },
+        { label: 'Location', placeholder: '#####', rules: ['required'], value: 'location' },
+        { label: 'Quantity', placeholder: '#####', rules: ['number', 'required'], value: 'quantity' }
       ],
       loading: false,
       editItem: {},
-      numberRules: [
-        value => !!value || 'Required.',
-        value => !isNaN(value) || 'Must be a number.'
-      ],
-      textRules: [
-        value => !!value || 'Required.'
-      ],
       valid: false
     }
   },
@@ -115,13 +109,41 @@ export default {
     }
   },
   methods: {
+    getRules (item) {
+      const rules = [
+        {
+          name: 'required',
+          func: value => {
+            return !!value || 'Required.'
+          }
+        },
+        {
+          name: 'number',
+          func: value => {
+            return !isNaN(value) || 'Must be a number.'
+          }
+        },
+        {
+          name: 'email',
+          func: value => {
+            const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+            return pattern.test(value) || 'Invalid e-mail.'
+          }
+        }
+      ]
+
+      return rules
+        .filter(m => item.includes(m.name))
+        .map(m => m.func)
+    },
     async remove () {
       this.loading = true
       let id = this.stock.id
 
       await this.$axios.delete(`/stock/${id}/`)
+      await this.wait(5000)
 
-      this.loading = true
+      this.loading = false
       this.active = false
       this.removeItem(id)
     },
@@ -131,10 +153,16 @@ export default {
       let quantity = parseInt(this.editItem.quantity)
 
       const { data } = await this.$axios.put(`/stock/${id}/`, { ...this.editItem, quantity: quantity })
+      await this.wait(5000)
 
       this.loading = false
       this.active = false
       this.refresh(data)
+    },
+    async wait (ms) {
+      return new Promise((resolve, reject) => {
+        setTimeout(resolve, ms)
+      })
     }
   }
 }

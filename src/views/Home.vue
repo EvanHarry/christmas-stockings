@@ -50,7 +50,7 @@
           dark
           dense
         >
-          <v-toolbar-title>Search</v-toolbar-title>
+          <v-toolbar-title>Stock</v-toolbar-title>
         </v-toolbar>
         <v-card-text>
           <v-select
