@@ -134,8 +134,8 @@ export default {
         value: false
       },
       fields: [
-        { label: 'Supplier Code', placeholder: '#####', rules: ['required'], value: 'supplier_code', text: true },
-        { label: 'Tidings Code', placeholder: '#####', rules: ['required'], value: 'tidings_code', text: true },
+        { label: 'Supplier Code', placeholder: '#####', rules: [], value: 'supplier_code', text: true },
+        { label: 'Tidings Code', placeholder: '#####', rules: [], value: 'tidings_code', text: true },
         { label: 'Supplier', placeholder: '#####', rules: ['required'], value: 'supplier', text: true },
         { label: 'Location', placeholder: '#####', rules: ['required'], value: 'location', text: true },
         { label: 'Quantity', placeholder: '#####', rules: ['number', 'required'], value: 'quantity', text: true }
