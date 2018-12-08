@@ -29,10 +29,11 @@
             <td class="align-center layout pr-1">
               <span>{{ props.item.quantity }}</span>
               <v-spacer />
-              <edit-stock
+              <edit-item
+                :item="props.item"
                 :refresh="updateItem"
                 :remove-item="removeItem"
-                :stock="props.item"
+                title="Stock"
               />
             </td>
           </template>
@@ -92,19 +93,22 @@
         </v-card-actions>
       </v-card>
     </v-flex>
-    <new-stock :refresh="getSuppliers" />
+    <new-item
+      :save-item="createItem"
+      title="stock"
+    />
   </v-layout>
 </template>
 
 <script>
-import EditStock from '@/components/EditStock'
-import NewStock from '@/components/NewStock'
+import EditItem from '@/components/EditItem'
+import NewItem from '@/components/NewItem'
 
 export default {
   name: 'home',
   components: {
-    EditStock,
-    NewStock
+    EditItem,
+    NewItem
   },
   data () {
     return {
@@ -162,19 +166,30 @@ export default {
 
       this.loading = false
     },
-    removeItem (id) {
+    async createItem (item) {
+      let quantity = parseInt(item.quantity)
+
+      await this.$axios.post('/stock/', { ...item, quantity: quantity })
+      await this.getSuppliers()
+    },
+    async removeItem (id) {
+      await this.$axios.delete(`/stock/${id}/`)
+
       let i = this.items
         .findIndex(m => m.id === id)
 
       this.items.splice(i, 1)
     },
-    updateItem (item) {
-      let id = item.id
+    async updateItem (item) {
+      let quantity = parseInt(item.quantity)
+
+      const { data } = await this.$axios.put(`/stock/${item.id}/`, { ...item, quantity: quantity })
+
       let i = this.items
-        .findIndex(m => m.id === id)
+        .findIndex(m => m.id === item.id)
 
       this.items.splice(i, 1)
-      this.items.push(item)
+      this.items.push(data)
     }
   }
 }

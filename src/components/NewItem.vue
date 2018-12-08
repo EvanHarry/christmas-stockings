@@ -21,7 +21,7 @@
         dark
         dense
       >
-        <v-toolbar-title>New Stock</v-toolbar-title>
+        <v-toolbar-title>New {{ title }}</v-toolbar-title>
       </v-toolbar>
       <v-form
         ref="form"
@@ -30,7 +30,7 @@
       >
         <v-card-text>
           <v-text-field
-            v-for="(item, i) in items"
+            v-for="(item, i) in fields"
             v-model="newItem[item.value]"
             :key="i"
             :label="item.label"
@@ -65,24 +65,26 @@
 </template>
 
 <script>
+import item from './item'
+
 export default {
-  name: 'new-stock',
+  name: 'new-item',
+  mixins: [
+    item
+  ],
   props: {
-    refresh: {
+    saveItem: {
       type: Function,
+      required: true
+    },
+    title: {
+      type: String,
       required: true
     }
   },
   data () {
     return {
       active: false,
-      items: [
-        { label: 'Supplier Code', placeholder: '#####', rules: ['required'], value: 'supplier_code' },
-        { label: 'Tidings Code', placeholder: '#####', rules: ['required'], value: 'tidings_code' },
-        { label: 'Supplier', placeholder: '#####', rules: ['required'], value: 'supplier' },
-        { label: 'Location', placeholder: '#####', rules: ['required'], value: 'location' },
-        { label: 'Quantity', placeholder: '#####', rules: ['number', 'required'], value: 'quantity' }
-      ],
       loading: false,
       newItem: {},
       valid: false
@@ -95,49 +97,14 @@ export default {
     }
   },
   methods: {
-    getRules (item) {
-      const rules = [
-        {
-          name: 'required',
-          func: value => {
-            return !!value || 'Required.'
-          }
-        },
-        {
-          name: 'number',
-          func: value => {
-            return !isNaN(value) || 'Must be a number.'
-          }
-        },
-        {
-          name: 'email',
-          func: value => {
-            const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-            return pattern.test(value) || 'Invalid e-mail.'
-          }
-        }
-      ]
-
-      return rules
-        .filter(m => item.includes(m.name))
-        .map(m => m.func)
-    },
     async save () {
       this.loading = true
+      let data = this.newItem
 
-      let quantity = parseInt(this.newItem.quantity)
-
-      await this.$axios.post('/stock/', { ...this.newItem, quantity: quantity })
-      await this.wait(5000)
+      await this.saveItem(data)
 
       this.loading = false
       this.active = false
-      this.refresh()
-    },
-    async wait (ms) {
-      return new Promise((resolve, reject) => {
-        setTimeout(resolve, ms)
-      })
     }
   }
 }

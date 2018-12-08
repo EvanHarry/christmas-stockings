@@ -20,7 +20,7 @@
         dark
         dense
       >
-        <v-toolbar-title>Edit Stock</v-toolbar-title>
+        <v-toolbar-title>Edit {{ title }}</v-toolbar-title>
         <v-spacer />
         <v-btn
           :disabled="loading"
@@ -37,7 +37,7 @@
       >
         <v-card-text>
           <v-text-field
-            v-for="(item, i) in items"
+            v-for="(item, i) in fields"
             v-model="editItem[item.value]"
             :key="i"
             :label="item.label"
@@ -72,9 +72,18 @@
 </template>
 
 <script>
+import item from './item'
+
 export default {
-  name: 'edit-stock',
+  name: 'edit-item',
+  mixins: [
+    item
+  ],
   props: {
+    item: {
+      type: Object,
+      required: true
+    },
     refresh: {
       type: Function,
       required: true
@@ -83,21 +92,14 @@ export default {
       type: Function,
       required: true
     },
-    stock: {
-      type: Object,
+    title: {
+      type: String,
       required: true
     }
   },
   data () {
     return {
       active: false,
-      items: [
-        { label: 'Supplier Code', placeholder: '#####', rules: ['required'], value: 'supplier_code' },
-        { label: 'Tidings Code', placeholder: '#####', rules: ['required'], value: 'tidings_code' },
-        { label: 'Supplier', placeholder: '#####', rules: ['required'], value: 'supplier' },
-        { label: 'Location', placeholder: '#####', rules: ['required'], value: 'location' },
-        { label: 'Quantity', placeholder: '#####', rules: ['number', 'required'], value: 'quantity' }
-      ],
       loading: false,
       editItem: {},
       valid: false
@@ -105,64 +107,27 @@ export default {
   },
   watch: {
     active () {
-      this.editItem = JSON.parse(JSON.stringify(this.stock))
+      this.editItem = JSON.parse(JSON.stringify(this.item))
     }
   },
   methods: {
-    getRules (item) {
-      const rules = [
-        {
-          name: 'required',
-          func: value => {
-            return !!value || 'Required.'
-          }
-        },
-        {
-          name: 'number',
-          func: value => {
-            return !isNaN(value) || 'Must be a number.'
-          }
-        },
-        {
-          name: 'email',
-          func: value => {
-            const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-            return pattern.test(value) || 'Invalid e-mail.'
-          }
-        }
-      ]
-
-      return rules
-        .filter(m => item.includes(m.name))
-        .map(m => m.func)
-    },
     async remove () {
       this.loading = true
-      let id = this.stock.id
+      let id = this.item.id
 
-      await this.$axios.delete(`/stock/${id}/`)
-      await this.wait(5000)
+      await this.removeItem(id)
 
       this.loading = false
       this.active = false
-      this.removeItem(id)
     },
     async update () {
       this.loading = true
-      let id = this.stock.id
-      let quantity = parseInt(this.editItem.quantity)
+      let data = this.editItem
 
-      const { data } = await this.$axios.put(`/stock/${id}/`, { ...this.editItem, quantity: quantity })
-      await this.wait(5000)
+      await this.refresh(data)
 
       this.loading = false
       this.active = false
-      this.refresh(data)
-    },
-    async wait (ms) {
-      return new Promise((resolve, reject) => {
-        setTimeout(resolve, ms)
-      })
     }
   }
 }
