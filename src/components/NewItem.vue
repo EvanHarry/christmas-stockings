@@ -26,7 +26,7 @@
       <v-form
         ref="form"
         v-model="valid"
-        @submit="save"
+        @submit.prevent="save"
       >
         <v-card-text>
           <div

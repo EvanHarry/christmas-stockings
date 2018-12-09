@@ -46,7 +46,7 @@
       <v-form
         ref="form"
         v-model="valid"
-        @submit="update"
+        @submit.prevent="update"
       >
         <v-card-text>
           <div

@@ -67,7 +67,7 @@
         <v-form
           ref="form"
           v-model="valid"
-          @submit="load"
+          @submit.prevent="load"
         >
           <v-card-text>
             <v-select

@@ -16,7 +16,7 @@
         <v-form
           ref="form"
           v-model="valid"
-          @submit="login"
+          @submit.prevent="login"
         >
           <v-card-text>
             <v-text-field
