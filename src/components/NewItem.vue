@@ -45,6 +45,7 @@
             />
             <v-checkbox
               v-if="item.bool"
+              v-model="newItem[item.value]"
               :disabled="item.disabled"
               class="mt-0"
               color="blue"
