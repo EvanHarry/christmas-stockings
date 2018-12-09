@@ -327,10 +327,7 @@ export default {
       let text = category === 'supplier' ? this.searchSupplier : this.searchText
 
       try {
-        const { data } = await this.$axios.post('/search/', {
-          'category': category,
-          'search_text': text
-        })
+        const { data } = await this.$axios.post('/search/', { category: category, search_text: text })
         this.items = data
 
         this.loading = false
@@ -352,12 +349,22 @@ export default {
         this.getSuppliers()
         this.getStockCount()
       } catch (e) {
+        this.alert = {
+          msg: 'Error creating stock item.',
+          value: true
+        }
+
         throw new Error()
       }
     },
     async removeItem (id) {
       try {
         await this.$axios.delete(`/stock/${id}/`)
+
+        this.alert = {
+          msg: 'Deleted stock item.',
+          value: true
+        }
 
         let i = this.items
           .findIndex(m => m.id === id)
@@ -380,6 +387,11 @@ export default {
         let quantity = parseInt(item.quantity)
 
         const { data } = await this.$axios.put(`/stock/${item.id}/`, { ...item, quantity: quantity })
+
+        this.alert = {
+          msg: 'Updated stock item.',
+          value: true
+        }
 
         let i = this.items
           .findIndex(m => m.id === item.id)

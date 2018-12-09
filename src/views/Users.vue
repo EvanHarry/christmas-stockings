@@ -187,6 +187,7 @@ export default {
     async createItem (item) {
       try {
         let admin = item.admin ? item.admin : false
+
         const { data } = await this.$axios.post('/users/', { ...item, admin: admin })
 
         this.alert = {
@@ -194,7 +195,7 @@ export default {
           value: true
         }
 
-        await this.getUsers()
+        this.getUsers()
       } catch (e) {
         this.alert = {
           msg: 'Error creating user.',
@@ -207,6 +208,11 @@ export default {
     async removeItem (id) {
       try {
         await this.$axios.delete(`/users/${id}/`)
+
+        this.alert = {
+          msg: 'Deleted user.',
+          value: true
+        }
 
         let i = this.items
           .findIndex(m => m.id === id)
@@ -223,7 +229,14 @@ export default {
     },
     async updateItem (item) {
       try {
-        const { data } = await this.$axios.put(`/users/${item.id}/`, { ...item })
+        let admin = item.admin ? item.admin : false
+
+        const { data } = await this.$axios.put(`/users/${item.id}/`, { ...item, admin: admin })
+
+        this.alert = {
+          msg: 'Updated user.',
+          value: true
+        }
 
         let i = this.items
           .findIndex(m => m.id === item.id)
