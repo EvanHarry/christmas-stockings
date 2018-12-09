@@ -129,7 +129,7 @@
     <new-item
       :fields="fields"
       :save-item="createItem"
-      title="stock"
+      title="Stock"
     />
   </v-layout>
 </template>

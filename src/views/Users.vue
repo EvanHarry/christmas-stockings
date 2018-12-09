@@ -67,7 +67,7 @@
     <new-item
       :fields="fields"
       :save-item="createItem"
-      title="stock"
+      title="User"
     />
   </v-layout>
 </template>
