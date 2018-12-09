@@ -94,11 +94,11 @@
             <v-divider />
             <v-list-tile>
               <v-list-tile-content>Username:</v-list-tile-content>
-              <v-list-tile-content class="align-end">{{ props.item.username }}</v-list-tile-content>
+              <span class="text-xs-right">{{ props.item.username }}</span>
             </v-list-tile>
             <v-list-tile>
               <v-list-tile-content>Admin:</v-list-tile-content>
-              <v-list-tile-content class="align-end">
+              <span class="text-xs-right">
                 <v-icon
                   v-if="!!props.item.admin"
                   color="green"
@@ -111,7 +111,7 @@
                   icon
                   small
                 >clear</v-icon>
-              </v-list-tile-content>
+              </span>
             </v-list-tile>
           </v-list>
         </v-data-iterator>

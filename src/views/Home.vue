@@ -222,7 +222,7 @@
               :key="i"
             >
               <v-list-tile-content>{{ item.text }}:</v-list-tile-content>
-              <v-list-tile-content class="align-end">{{ props.item[item.value] }}</v-list-tile-content>
+              <span class="text-xs-right">{{ props.item[item.value] }}</span>
             </v-list-tile>
           </v-list>
         </v-data-iterator>
