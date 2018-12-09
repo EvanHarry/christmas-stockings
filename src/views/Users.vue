@@ -2,7 +2,8 @@
   <v-layout justify-center>
     <v-flex
       class="pr-1"
-      xs8
+      hidden-sm-and-down
+      md8
     >
       <v-card raised>
         <v-toolbar
@@ -47,6 +48,73 @@
             </td>
           </template>
         </v-data-table>
+      </v-card>
+    </v-flex>
+    <v-flex
+      hidden-md-and-up
+      sm8
+      xs12
+    >
+      <v-card raised>
+        <v-toolbar
+          card
+          color="red darken-3"
+          dark
+          dense
+        >
+          <v-toolbar-title>Users</v-toolbar-title>
+        </v-toolbar>
+        <v-data-iterator
+          :headers="headers"
+          :items="items"
+          :rows-per-page-items="[1]"
+        >
+          <template slot="no-data">
+            <v-list dense>
+              <v-list-tile>
+                <v-list-tile-content>No data available</v-list-tile-content>
+              </v-list-tile>
+            </v-list>
+          </template>
+          <v-list
+            dense
+            slot="item"
+            slot-scope="props"
+          >
+            <v-list-tile>
+              <v-list-tile-content class="body-2">User</v-list-tile-content>
+              <edit-item
+                :fields="fields"
+                :item="props.item"
+                :refresh="updateItem"
+                :remove-item="removeItem"
+                title="User"
+              />
+            </v-list-tile>
+            <v-divider />
+            <v-list-tile>
+              <v-list-tile-content>Username:</v-list-tile-content>
+              <v-list-tile-content class="align-end">{{ props.item.username }}</v-list-tile-content>
+            </v-list-tile>
+            <v-list-tile>
+              <v-list-tile-content>Admin:</v-list-tile-content>
+              <v-list-tile-content class="align-end">
+                <v-icon
+                  v-if="!!props.item.admin"
+                  color="green"
+                  icon
+                  small
+                >check</v-icon>
+                <v-icon
+                  v-else
+                  color="red"
+                  icon
+                  small
+                >clear</v-icon>
+              </v-list-tile-content>
+            </v-list-tile>
+          </v-list>
+        </v-data-iterator>
       </v-card>
     </v-flex>
     <v-snackbar

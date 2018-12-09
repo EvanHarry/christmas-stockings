@@ -3,7 +3,11 @@
     align-center
     justify-center
   >
-    <v-flex xs4>
+    <v-flex
+      md4
+      sm6
+      xs12
+    >
       <v-card raised>
         <v-toolbar
           card

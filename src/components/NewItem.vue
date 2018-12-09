@@ -6,11 +6,13 @@
   >
     <v-btn
       slot="activator"
+      :left="$vuetify.breakpoint.xsOnly"
+      :right="$vuetify.breakpoint.smAndUp"
+      :small="$vuetify.breakpoint.xsOnly"
       bottom
       color="purple darken-3 white--text"
       fab
       fixed
-      right
     >
       <v-icon>add</v-icon>
     </v-btn>
