@@ -5,6 +5,7 @@ export default {
         {
           name: 'required',
           func: value => {
+            if (value === 0) return true
             return !!value || 'Required.'
           }
         },
