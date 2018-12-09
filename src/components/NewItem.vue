@@ -36,12 +36,14 @@
             <v-text-field
               v-if="item.text"
               v-model="newItem[item.value]"
+              :disabled="item.disabled"
               :label="item.label"
               :placeholder="item.placeholder"
               :rules="getRules(item.rules)"
             />
             <v-checkbox
               v-if="item.bool"
+              :disabled="item.disabled"
               class="mt-0"
               color="blue"
               hide-details

@@ -22,19 +22,6 @@
       >
         <v-toolbar-title>Edit {{ title }}</v-toolbar-title>
         <v-spacer />
-        <v-tooltip
-          v-if="item.last_modified"
-          bottom
-        >
-          <v-btn
-            slot="activator"
-            icon
-          >
-            <v-icon>history</v-icon>
-          </v-btn>
-          <span>Date - {{ item.last_modified.split(' - ')[0] }}<br ></span>
-          <span>User - {{ item.last_modified.split(' - ')[1] }}<br ></span>
-        </v-tooltip>
         <v-btn
           :disabled="loading"
           icon
@@ -56,6 +43,7 @@
             <v-text-field
               v-if="item.text"
               v-model="editItem[item.value]"
+              :disabled="item.disabled"
               :label="item.label"
               :placeholder="item.placeholder"
               :rules="getRules(item.rules)"
@@ -63,6 +51,7 @@
             <v-checkbox
               v-if="item .bool"
               v-model="editItem[item.value]"
+              :disabled="item.disabled"
               class="mt-0"
               color="blue"
               hide-details

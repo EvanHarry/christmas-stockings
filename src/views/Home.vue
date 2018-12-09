@@ -155,6 +155,7 @@ export default {
         value: false
       },
       fields: [
+        { label: 'Last Modified', placeholder: '#####', rules: [], value: 'last_modified', text: true, disabled: true },
         { label: 'Supplier Code', placeholder: '#####', rules: ['url-safe'], value: 'supplier_code', text: true },
         { label: 'Tidings Code', placeholder: '#####', rules: ['url-safe'], value: 'tidings_code', text: true },
         { label: 'Supplier', placeholder: '#####', rules: ['required', 'url-safe'], value: 'supplier', text: true },
