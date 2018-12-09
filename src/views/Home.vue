@@ -68,7 +68,6 @@
         </v-toolbar>
         <v-form
           ref="form"
-          v-model="valid"
           @submit.prevent="load"
         >
           <v-card-text>
@@ -82,9 +81,8 @@
               v-if="searchCode"
               v-model="searchText"
               :disabled="!searchCategory"
-              :hide-details="valid"
-              :rules="getRules(['url-safe'])"
               clearable
+              hide-details
               label="Search Text"
               placeholder="Search item..."
             />
@@ -99,7 +97,7 @@
           </v-card-text>
           <v-card-actions>
             <v-btn
-              :disabled="loading || !searchValid || !valid"
+              :disabled="loading || !searchValid"
               :loading="loading"
               block
               color="purple white--text"
@@ -141,7 +139,6 @@
         </v-toolbar>
         <v-form
           ref="form"
-          v-model="valid"
           @submit.prevent="load"
         >
           <v-card-text>
@@ -155,9 +152,8 @@
               v-if="searchCode"
               v-model="searchText"
               :disabled="!searchCategory"
-              :hide-details="valid"
-              :rules="getRules(['url-safe'])"
               clearable
+              hide-details
               label="Search Text"
               placeholder="Search item..."
             />
@@ -172,7 +168,7 @@
           </v-card-text>
           <v-card-actions>
             <v-btn
-              :disabled="loading || !searchValid || !valid"
+              :disabled="loading || !searchValid"
               :loading="loading"
               block
               color="purple white--text"
@@ -254,7 +250,6 @@
 <script>
 import EditItem from '@/components/EditItem'
 import NewItem from '@/components/NewItem'
-import item from '@/mixins/item'
 
 export default {
   name: 'home',
@@ -262,9 +257,6 @@ export default {
     EditItem,
     NewItem
   },
-  mixins: [
-    item
-  ],
   data () {
     return {
       alert: {
@@ -273,9 +265,9 @@ export default {
       },
       fields: [
         { label: 'Last Modified', placeholder: '#####', rules: [], value: 'last_modified', text: true, disabled: true },
-        { label: 'Supplier Code', placeholder: '#####', rules: ['url-safe'], value: 'supplier_code', text: true },
-        { label: 'Tidings Code', placeholder: '#####', rules: ['url-safe'], value: 'tidings_code', text: true },
-        { label: 'Supplier', placeholder: '#####', rules: ['required', 'url-safe'], value: 'supplier', text: true },
+        { label: 'Supplier Code', placeholder: '#####', rules: [], value: 'supplier_code', text: true },
+        { label: 'Tidings Code', placeholder: '#####', rules: [], value: 'tidings_code', text: true },
+        { label: 'Supplier', placeholder: '#####', rules: ['required'], value: 'supplier', text: true },
         { label: 'Location', placeholder: '#####', rules: ['required'], value: 'location', text: true },
         { label: 'Quantity', placeholder: '#####', rules: ['number', 'required'], value: 'quantity', text: true }
       ],
@@ -297,8 +289,7 @@ export default {
       searchSupplier: '',
       searchText: '',
       stockCount: '',
-      suppliers: [],
-      valid: false
+      suppliers: []
     }
   },
   computed: {
@@ -336,7 +327,10 @@ export default {
       let text = category === 'supplier' ? this.searchSupplier : this.searchText
 
       try {
-        const { data } = await this.$axios.get(`/search/${category}/${encodeURIComponent(text)}/`)
+        const { data } = await this.$axios.post('/search/', {
+          'category': category,
+          'search_text': text
+        })
         this.items = data
 
         this.loading = false
