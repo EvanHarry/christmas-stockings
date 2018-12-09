@@ -25,6 +25,18 @@
         >
           <v-icon>supervisor_account</v-icon>
         </v-btn>
+        <v-tooltip
+          v-if="apiVersion"
+          bottom
+        >
+          <v-btn
+            slot="activator"
+            icon
+          >
+            <v-icon>info</v-icon>
+          </v-btn>
+          <span>API Version {{ apiVersion }}<br ></span>
+        </v-tooltip>
         <v-btn
           icon
           @click="logout($router)"
@@ -46,7 +58,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex'
+import { mapActions, mapGetters, mapState } from 'vuex'
 
 export default {
   name: 'App',
@@ -54,6 +66,9 @@ export default {
     ...mapGetters([
       'admin',
       'loggedIn'
+    ]),
+    ...mapState([
+      'apiVersion'
     ])
   },
   methods: {

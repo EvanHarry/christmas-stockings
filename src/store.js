@@ -8,6 +8,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
+    apiVersion: null,
     loading: false,
     user: null
   },
@@ -29,6 +30,9 @@ export default new Vuex.Store({
     },
     logout (state) {
       state.user = null
+    },
+    setApiVersion (state, version) {
+      state.apiVersion = version
     },
     startLoading (state) {
       state.loading = true
