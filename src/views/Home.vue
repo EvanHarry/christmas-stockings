@@ -73,7 +73,7 @@
           <v-card-text>
             <v-select
               v-model="searchCategory"
-              :items="searchItems"
+              :items="headers"
               label="Search Category"
               placeholder="None"
             />
@@ -144,7 +144,7 @@
           <v-card-text>
             <v-select
               v-model="searchCategory"
-              :items="searchItems"
+              :items="headers"
               label="Search Category"
               placeholder="None"
             />
@@ -281,11 +281,6 @@ export default {
       items: [],
       loading: false,
       searchCategory: null,
-      searchItems: [
-        { text: 'Supplier Code', value: 'supplier_code' },
-        { text: 'Tidings Code', value: 'tidings_code' },
-        { text: 'Supplier', value: 'supplier' }
-      ],
       searchSupplier: '',
       searchText: '',
       stockCount: '',
