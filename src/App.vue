@@ -13,6 +13,7 @@
       <v-spacer />
       <v-toolbar-items v-if="loggedIn">
         <v-btn
+          v-if="admin"
           icon
           @click="$router.push('/')"
         >
