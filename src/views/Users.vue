@@ -76,13 +76,16 @@
               </v-list-tile>
             </v-list>
           </template>
-          <v-list
-            dense
+          <template
             slot="item"
             slot-scope="props"
           >
-            <v-list-tile>
-              <v-list-tile-content class="body-2">User</v-list-tile-content>
+            <div class="layout">
+              <span
+                class="body-2 pl-3 py-2"
+                style="align-self: center;"
+              >User</span>
+              <v-spacer />
               <edit-item
                 :fields="fields"
                 :item="props.item"
@@ -90,30 +93,35 @@
                 :remove-item="removeItem"
                 title="User"
               />
-            </v-list-tile>
-            <v-divider />
-            <v-list-tile>
-              <v-list-tile-content>Username:</v-list-tile-content>
-              <span class="text-xs-right">{{ props.item.username }}</span>
-            </v-list-tile>
-            <v-list-tile>
-              <v-list-tile-content>Admin:</v-list-tile-content>
-              <span class="text-xs-right">
-                <v-icon
-                  v-if="!!props.item.admin"
-                  color="green"
-                  icon
-                  small
-                >check</v-icon>
-                <v-icon
-                  v-else
-                  color="red"
-                  icon
-                  small
-                >clear</v-icon>
-              </span>
-            </v-list-tile>
-          </v-list>
+            </div>
+            <v-list
+              class="pt-0"
+              dense
+            >
+              <v-divider />
+              <v-list-tile>
+                <v-list-tile-content>Username:</v-list-tile-content>
+                <span class="text-xs-right">{{ props.item.username }}</span>
+              </v-list-tile>
+              <v-list-tile>
+                <v-list-tile-content>Admin:</v-list-tile-content>
+                <span class="text-xs-right">
+                  <v-icon
+                    v-if="!!props.item.admin"
+                    color="green"
+                    icon
+                    small
+                  >check</v-icon>
+                  <v-icon
+                    v-else
+                    color="red"
+                    icon
+                    small
+                  >clear</v-icon>
+                </span>
+              </v-list-tile>
+            </v-list>
+          </template>
         </v-data-iterator>
       </v-card>
     </v-flex>

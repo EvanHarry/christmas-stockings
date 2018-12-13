@@ -197,13 +197,16 @@
               </v-list-tile>
             </v-list>
           </template>
-          <v-list
-            dense
+          <template
             slot="item"
             slot-scope="props"
           >
-            <v-list-tile>
-              <v-list-tile-content class="body-2">Stock Item</v-list-tile-content>
+            <div class="layout">
+              <span
+                class="body-2 pl-3 py-2"
+                style="align-self: center;"
+              >Stock Item</span>
+              <v-spacer />
               <edit-item
                 :fields="fields"
                 :item="props.item"
@@ -211,16 +214,21 @@
                 :remove-item="removeItem"
                 title="Stock"
               />
-            </v-list-tile>
-            <v-divider />
-            <v-list-tile
-              v-for="(item, i) in headers"
-              :key="i"
+            </div>
+            <v-list
+              class="pt-0"
+              dense
             >
-              <v-list-tile-content>{{ item.text }}:</v-list-tile-content>
-              <span class="text-xs-right">{{ props.item[item.value] }}</span>
-            </v-list-tile>
-          </v-list>
+              <v-divider />
+              <v-list-tile
+                v-for="(item, i) in headers"
+                :key="i"
+              >
+                <v-list-tile-content>{{ item.text }}:</v-list-tile-content>
+                <span class="text-xs-right">{{ props.item[item.value] }}</span>
+              </v-list-tile>
+            </v-list>
+          </template>
         </v-data-iterator>
       </v-card>
     </v-flex>
