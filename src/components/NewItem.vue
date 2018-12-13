@@ -61,7 +61,8 @@
             depressed
             type="submit"
           >
-            <span>Save</span>
+            <span>Make it snow</span>
+            <span slot="loader">Hold on for deer life</span>
           </v-btn>
           <v-btn
             :disabled="loading"
@@ -70,7 +71,7 @@
             depressed
             @click="active = false"
           >
-            <span>Cancel</span>
+            <span>Bah humbug</span>
           </v-btn>
         </v-card-actions>
       </v-form>
