@@ -13,6 +13,13 @@
       <v-spacer />
       <v-toolbar-items v-if="loggedIn">
         <v-btn
+          v-if="$vuetify.breakpoint.mdAndUp && apiVersion"
+          disabled
+          flat
+        >
+          <span>{{ apiVersion }}</span>
+        </v-btn>
+        <v-btn
           v-for="(item, i) in items"
           :icon="$vuetify.breakpoint.smAndDown"
           :key="i"
@@ -36,7 +43,7 @@
       <v-container
         fill-height
         fluid
-        class="pa-2 pb-2"
+        class="pa-2"
       >
         <router-view />
       </v-container>
@@ -45,7 +52,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex'
+import { mapActions, mapGetters, mapState } from 'vuex'
 
 export default {
   name: 'App',
@@ -61,6 +68,9 @@ export default {
     ...mapGetters([
       'admin',
       'loggedIn'
+    ]),
+    ...mapState([
+      'apiVersion'
     ])
   },
   methods: {

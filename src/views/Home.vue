@@ -229,6 +229,12 @@
               </v-list-tile>
             </v-list>
           </template>
+          <template
+            slot="pageText"
+            slot-scope="props"
+          >
+            Item {{ props.pageStart }} of {{ props.itemsLength }}
+          </template>
         </v-data-iterator>
       </v-card>
     </v-flex>
