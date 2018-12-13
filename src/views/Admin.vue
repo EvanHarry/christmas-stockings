@@ -1,6 +1,7 @@
 <template>
   <v-layout justify-center>
     <v-flex
+      :class="$vuetify.breakpoint.mdAndUp ? 'pr-1' : ''"
       md8
       sm8
       xs12
@@ -122,6 +123,76 @@
           </template>
         </v-data-iterator>
       </v-card>
+      <v-card
+        v-if="$vuetify.breakpoint.smAndDown"
+        class="mt-2"
+        raised
+      >
+        <v-toolbar
+          card
+          color="blue darken-3"
+          dark
+          dense
+        >
+          <v-toolbar-title>Settings</v-toolbar-title>
+        </v-toolbar>
+        <v-list dense two-line>
+          <v-list-tile avatar>
+            <v-list-tile-avatar>
+              <v-icon color="grey darken-3">dns</v-icon>
+            </v-list-tile-avatar>
+            <v-list-tile-content>
+              <v-list-tile-title>API</v-list-tile-title>
+              <v-list-tile-sub-title>{{ apiVersion }}</v-list-tile-sub-title>
+            </v-list-tile-content>
+          </v-list-tile>
+          <v-list-tile avatar>
+            <v-list-tile-avatar>
+              <v-icon color="grey darken-3">devices</v-icon>
+            </v-list-tile-avatar>
+            <v-list-tile-content>
+              <v-list-tile-title>GUI</v-list-tile-title>
+              <v-list-tile-sub-title>{{ guiVersion }}</v-list-tile-sub-title>
+            </v-list-tile-content>
+          </v-list-tile>
+        </v-list>
+      </v-card>
+    </v-flex>
+    <v-flex
+      class="pl-1"
+      hidden-sm-and-down
+      md4
+    >
+      <v-card raised>
+        <v-toolbar
+          card
+          color="blue darken-3"
+          dark
+          dense
+        >
+          <v-toolbar-title>Settings</v-toolbar-title>
+        </v-toolbar>
+        <v-list dense two-line>
+          <v-list-tile avatar>
+            <v-list-tile-avatar>
+              <v-icon color="grey darken-3">dns</v-icon>
+            </v-list-tile-avatar>
+            <v-list-tile-content>
+              <v-list-tile-title>API</v-list-tile-title>
+              <v-list-tile-sub-title>{{ apiVersion }}</v-list-tile-sub-title>
+            </v-list-tile-content>
+          </v-list-tile>
+          <v-list-tile avatar>
+            <v-list-tile-avatar>
+              <v-icon color="grey darken-3">devices</v-icon>
+            </v-list-tile-avatar>
+            <v-list-tile-content>
+              <v-list-tile-title>GUI</v-list-tile-title>
+              <v-list-tile-sub-title>{{ guiVersion }}</v-list-tile-sub-title>
+            </v-list-tile-content>
+          </v-list-tile>
+        </v-list>
+      </v-card>
     </v-flex>
     <v-snackbar
       v-model="alert.value"
@@ -148,7 +219,7 @@ import EditItem from '@/components/EditItem'
 import NewItem from '@/components/NewItem'
 
 export default {
-  name: 'users',
+  name: 'admin',
   components: {
     EditItem,
     NewItem
@@ -173,6 +244,8 @@ export default {
   },
   computed: {
     ...mapState([
+      'apiVersion',
+      'guiVersion',
       'user'
     ])
   },

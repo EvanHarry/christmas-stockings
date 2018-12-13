@@ -5,7 +5,7 @@ import store from '@/store'
 import { getTokenBody, isTokenExpired } from '@/assets/auth'
 
 import Home from '@/views/Home.vue'
-import Users from '@/views/Users.vue'
+import Admin from '@/views/Admin.vue'
 import Login from '@/views/Login.vue'
 
 Vue.use(Router)
@@ -21,9 +21,9 @@ let router = new Router({
       }
     },
     {
-      path: '/users',
-      name: 'users',
-      component: Users,
+      path: '/admin',
+      name: 'admin',
+      component: Admin,
       meta: {
         admin: true,
         auth: true

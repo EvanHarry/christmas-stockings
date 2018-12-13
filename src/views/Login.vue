@@ -1,6 +1,6 @@
 <template>
   <v-layout
-    align-center
+    :align-center="$vuetify.breakpoint.mdAndUp"
     justify-center
   >
     <v-flex
@@ -67,6 +67,14 @@
         <v-icon>close</v-icon>
       </v-btn>
     </v-snackbar>
+    <v-footer
+      class="justify-center"
+      color="grey darken-3"
+      dark
+      fixed
+    >
+      <span>Made by <strong>Evan Harry</strong></span>
+    </v-footer>
   </v-layout>
 </template>
 

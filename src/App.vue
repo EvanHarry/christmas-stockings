@@ -11,14 +11,7 @@
         <span v-if="$vuetify.breakpoint.mdAndUp" class="font-weight-light">CHRISTMAS STOCKINGS</span>
       </v-toolbar-title>
       <v-spacer />
-      <v-toolbar-items v-if="loggedIn">
-        <v-btn
-          v-if="$vuetify.breakpoint.mdAndUp && apiVersion"
-          disabled
-          flat
-        >
-          <span>{{ apiVersion }}</span>
-        </v-btn>
+      <v-toolbar-items v-if="$vuetify.breakpoint.mdAndUp && loggedIn">
         <v-btn
           v-for="(item, i) in items"
           :icon="$vuetify.breakpoint.smAndDown"
@@ -38,6 +31,33 @@
           <v-icon v-if="$vuetify.breakpoint.smAndDown">exit_to_app</v-icon>
         </v-btn>
       </v-toolbar-items>
+      <v-menu
+        v-if="$vuetify.breakpoint.smAndDown"
+        bottom
+        left
+        min-width="150"
+      >
+        <v-btn
+          slot="activator"
+          icon
+        >
+          <v-icon>more_vert</v-icon>
+        </v-btn>
+        <v-list>
+          <v-list-tile
+            v-for="(item, i) in items"
+            :disabled="item.disabled"
+            :key="i"
+            @click="$router.push(item.to)"
+          >
+            <v-list-tile-title>{{ item.text }}</v-list-tile-title>
+          </v-list-tile>
+          <v-divider />
+          <v-list-tile @click="logout($router)">
+            <v-list-tile-title>Logout</v-list-tile-title>
+          </v-list-tile>
+        </v-list>
+      </v-menu>
     </v-toolbar>
     <v-content>
       <v-container
@@ -52,7 +72,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapState } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 
 export default {
   name: 'App',
@@ -60,7 +80,7 @@ export default {
     return {
       items: [
         { text: 'Home', icon: 'home', admin: true, to: '/' },
-        { text: 'Users', icon: 'supervisor_account', admin: true, to: '/users' }
+        { text: 'Admin', icon: 'supervisor_account', admin: true, to: '/admin' }
       ]
     }
   },
@@ -68,9 +88,6 @@ export default {
     ...mapGetters([
       'admin',
       'loggedIn'
-    ]),
-    ...mapState([
-      'apiVersion'
     ])
   },
   methods: {
