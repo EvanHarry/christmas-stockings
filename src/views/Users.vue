@@ -1,8 +1,9 @@
 <template>
   <v-layout justify-center>
     <v-flex
-      hidden-sm-and-down
       md8
+      sm8
+      xs12
     >
       <v-card raised>
         <v-toolbar
@@ -20,6 +21,7 @@
           />
         </v-toolbar>
         <v-data-table
+          v-if="$vuetify.breakpoint.mdAndUp"
           :headers="headers"
           :items="items"
           :rows-per-page-items="[5]"
@@ -53,29 +55,8 @@
             </td>
           </template>
         </v-data-table>
-      </v-card>
-    </v-flex>
-    <v-flex
-      hidden-md-and-up
-      sm8
-      xs12
-    >
-      <v-card raised>
-        <v-toolbar
-          card
-          color="red darken-3"
-          dark
-          dense
-        >
-          <v-toolbar-title>Users</v-toolbar-title>
-          <v-spacer />
-          <new-item
-            :fields="fields"
-            :save-item="createItem"
-            title="User"
-          />
-        </v-toolbar>
         <v-data-iterator
+          v-else
           :headers="headers"
           :items="items"
           :rows-per-page-items="[1]"

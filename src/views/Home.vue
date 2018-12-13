@@ -1,9 +1,10 @@
 <template>
   <v-layout justify-center>
     <v-flex
-      class="pr-1"
-      hidden-sm-and-down
+      :class="$vuetify.breakpoint.mdAndUp ? 'pr-1' : ''"
       md8
+      sm8
+      xs12
     >
       <v-card raised>
         <v-toolbar
@@ -20,7 +21,16 @@
             title="Stock"
           />
         </v-toolbar>
+        <search
+          v-if="$vuetify.breakpoint.smAndDown"
+          :headers="headers"
+          :locations="locations"
+          :load="load"
+          :loading="loading"
+          :suppliers="suppliers"
+        />
         <v-data-table
+          v-if="$vuetify.breakpoint.mdAndUp"
           :headers="headers"
           :items="items"
           :rows-per-page-items="[5]"
@@ -47,133 +57,8 @@
           </template>
         </v-data-table>
       </v-card>
-    </v-flex>
-    <v-flex
-      class="pl-1"
-      hidden-sm-and-down
-      md4
-    >
-      <v-card raised>
-        <v-toolbar
-          card
-          color="blue darken-3"
-          dark
-          dense
-        >
-          <v-toolbar-title>Search</v-toolbar-title>
-        </v-toolbar>
-        <v-form
-          ref="form"
-          @submit.prevent="load"
-        >
-          <v-card-text>
-            <v-select
-              v-model="searchCategory"
-              :items="headers"
-              label="Search Category"
-              placeholder="None"
-            />
-            <v-text-field
-              v-if="searchCode"
-              v-model="searchText"
-              :disabled="!searchCategory"
-              clearable
-              hide-details
-              label="Search Text"
-              placeholder="Search item..."
-            />
-            <v-select
-              v-else
-              v-model="searchText"
-              :items="searchCategory === 'supplier' ? suppliers : locations"
-              hide-details
-              label="Search Text"
-              placeholder="Search item..."
-            />
-          </v-card-text>
-          <v-card-actions>
-            <v-btn
-              :disabled="loading || !searchValid"
-              :loading="loading"
-              block
-              color="purple white--text"
-              depressed
-              type="submit"
-            >
-              <span>Make it snow</span>
-              <span slot="loader">Hold on for deer life</span>
-            </v-btn>
-          </v-card-actions>
-        </v-form>
-      </v-card>
-    </v-flex>
-    <v-flex
-      hidden-md-and-up
-      sm8
-      xs12
-    >
       <v-card
-        raised
-      >
-        <v-toolbar
-          card
-          color="red darken-3"
-          dark
-          dense
-        >
-          <v-toolbar-title>Stock</v-toolbar-title>
-          <v-spacer />
-          <new-item
-            :fields="fields"
-            :save-item="createItem"
-            title="Stock"
-          />
-        </v-toolbar>
-        <v-form
-          ref="form"
-          @submit.prevent="load"
-        >
-          <v-card-text>
-            <v-select
-              v-model="searchCategory"
-              :items="headers"
-              label="Search Category"
-              placeholder="None"
-            />
-            <v-text-field
-              v-if="searchCode"
-              v-model="searchText"
-              :disabled="!searchCategory"
-              clearable
-              hide-details
-              label="Search Text"
-              placeholder="Search item..."
-            />
-            <v-select
-              v-else
-              v-model="searchText"
-              :items="searchCategory === 'supplier' ? suppliers : locations"
-              hide-details
-              label="Search Text"
-              placeholder="Search item..."
-            />
-          </v-card-text>
-          <v-card-actions>
-            <v-btn
-              :disabled="loading || !searchValid"
-              :loading="loading"
-              block
-              color="purple white--text"
-              depressed
-              type="submit"
-            >
-              <span>Make it snow</span>
-              <span slot="loader">Hold on for deer life</span>
-            </v-btn>
-          </v-card-actions>
-        </v-form>
-      </v-card>
-      <v-card
+        v-if="$vuetify.breakpoint.smAndDown"
         class="mt-2"
         raised
       >
@@ -230,6 +115,29 @@
         </v-data-iterator>
       </v-card>
     </v-flex>
+    <v-flex
+      class="pl-1"
+      hidden-sm-and-down
+      md4
+    >
+      <v-card raised>
+        <v-toolbar
+          card
+          color="blue darken-3"
+          dark
+          dense
+        >
+          <v-toolbar-title>Search</v-toolbar-title>
+        </v-toolbar>
+        <search
+          :headers="headers"
+          :locations="locations"
+          :load="load"
+          :loading="loading"
+          :suppliers="suppliers"
+        />
+      </v-card>
+    </v-flex>
     <v-snackbar
       v-model="alert.value"
       bottom
@@ -251,12 +159,14 @@
 <script>
 import EditItem from '@/components/EditItem'
 import NewItem from '@/components/NewItem'
+import Search from '@/components/Search'
 
 export default {
   name: 'home',
   components: {
     EditItem,
-    NewItem
+    NewItem,
+    Search
   },
   data () {
     return {
@@ -282,27 +192,9 @@ export default {
       items: [],
       loading: false,
       locations: [],
-      searchCategory: null,
-      searchText: null,
       stockCount: null,
       stockEntries: null,
       suppliers: []
-    }
-  },
-  computed: {
-    searchCode () {
-      let category = this.headers
-        .find(m => m.value === this.searchCategory)
-
-      return category ? category.type === 'text' : true
-    },
-    searchValid () {
-      return this.searchText
-    }
-  },
-  watch: {
-    searchCategory () {
-      this.searchText = null
     }
   },
   mounted () {
@@ -327,11 +219,8 @@ export default {
       this.stockCount = data.count
       this.stockEntries = data.entries
     },
-    async load () {
+    async load (category, text) {
       this.loading = true
-
-      let category = this.searchCategory
-      let text = this.searchText
 
       try {
         const { data } = await this.$axios.post('/search/', { category: category, search_text: text })
