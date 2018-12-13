@@ -157,11 +157,6 @@
         <v-icon>close</v-icon>
       </v-btn>
     </v-snackbar>
-    <new-item
-      :fields="fields"
-      :save-item="createItem"
-      title="User"
-    />
   </v-layout>
 </template>
 
