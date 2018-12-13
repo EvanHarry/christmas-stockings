@@ -14,14 +14,10 @@
         >
           <v-toolbar-title>Stock</v-toolbar-title>
           <v-spacer />
-          <v-toolbar-title
-            v-if="stockCount"
-            class="body-2"
-          >Total Items - {{ stockCount }}</v-toolbar-title>
-          <v-progress-circular
-            v-else
-            indeterminate
-            size="28"
+          <new-item
+            :fields="fields"
+            :save-item="createItem"
+            title="Stock"
           />
         </v-toolbar>
         <v-data-table
@@ -88,10 +84,10 @@
             />
             <v-select
               v-else
-              v-model="searchSupplier"
-              :items="suppliers"
+              v-model="searchText"
+              :items="searchCategory === 'supplier' ? suppliers : locations"
               hide-details
-              label="Search Supplier"
+              label="Search Text"
               placeholder="Search item..."
             />
           </v-card-text>
@@ -127,14 +123,10 @@
         >
           <v-toolbar-title>Stock</v-toolbar-title>
           <v-spacer />
-          <v-toolbar-title
-            v-if="stockCount"
-            class="body-2"
-          >Total Items - {{ stockCount }}</v-toolbar-title>
-          <v-progress-circular
-            v-else
-            indeterminate
-            size="28"
+          <new-item
+            :fields="fields"
+            :save-item="createItem"
+            title="Stock"
           />
         </v-toolbar>
         <v-form
@@ -159,10 +151,10 @@
             />
             <v-select
               v-else
-              v-model="searchSupplier"
-              :items="suppliers"
+              v-model="searchText"
+              :items="searchCategory === 'supplier' ? suppliers : locations"
               hide-details
-              label="Search Supplier"
+              label="Search Text"
               placeholder="Search item..."
             />
           </v-card-text>
@@ -233,7 +225,7 @@
             slot="pageText"
             slot-scope="props"
           >
-            Item {{ props.pageStart }} of {{ props.itemsLength }}
+            {{ props.pageStart }} of {{ props.itemsLength }}
           </template>
         </v-data-iterator>
       </v-card>
@@ -253,11 +245,6 @@
         <v-icon>close</v-icon>
       </v-btn>
     </v-snackbar>
-    <new-item
-      :fields="fields"
-      :save-item="createItem"
-      title="Stock"
-    />
   </v-layout>
 </template>
 
@@ -286,40 +273,49 @@ export default {
         { label: 'Quantity', placeholder: '#####', rules: ['number', 'required'], value: 'quantity', text: true }
       ],
       headers: [
-        { text: 'Supplier Code', value: 'supplier_code', sortable: true },
-        { text: 'Tidings Code', value: 'tidings_code', sortable: true },
-        { text: 'Supplier', value: 'supplier', sortable: true },
-        { text: 'Location', value: 'location', sortable: true },
-        { text: 'Quantity', value: 'quantity', sortable: true, width: 100 }
+        { text: 'Supplier Code', value: 'supplier_code', sortable: true, type: 'text' },
+        { text: 'Tidings Code', value: 'tidings_code', sortable: true, type: 'text' },
+        { text: 'Supplier', value: 'supplier', sortable: true, type: 'select' },
+        { text: 'Location', value: 'location', sortable: true, type: 'select' },
+        { text: 'Quantity', value: 'quantity', sortable: true, type: 'text', width: 100 }
       ],
       items: [],
       loading: false,
+      locations: [],
       searchCategory: null,
-      searchSupplier: '',
-      searchText: '',
-      stockCount: '',
+      searchText: null,
+      stockCount: null,
+      stockEntries: null,
       suppliers: []
     }
   },
   computed: {
     searchCode () {
-      return this.searchCategory ? this.searchCategory !== 'supplier' : true
+      let category = this.headers
+        .find(m => m.value === this.searchCategory)
+
+      return category ? category.type === 'text' : true
     },
     searchValid () {
-      return this.searchSupplier || this.searchText
+      return this.searchText
     }
   },
   watch: {
     searchCategory () {
-      this.searchSupplier = null
-      this.searchText = ''
+      this.searchText = null
     }
   },
-  async mounted () {
-    await this.getSuppliers()
-    await this.getStockCount()
+  mounted () {
+    this.getLocations()
+    this.getSuppliers()
+    this.getStockCount()
   },
   methods: {
+    async getLocations () {
+      const { data } = await this.$axios.get('/locations/')
+
+      this.locations = data
+    },
     async getSuppliers () {
       const { data } = await this.$axios.get('/suppliers/')
 
@@ -327,13 +323,15 @@ export default {
     },
     async getStockCount () {
       const { data } = await this.$axios.get('/stock/statistics/')
+
       this.stockCount = data.count
+      this.stockEntries = data.entries
     },
     async load () {
       this.loading = true
 
       let category = this.searchCategory
-      let text = category === 'supplier' ? this.searchSupplier : this.searchText
+      let text = this.searchText
 
       try {
         const { data } = await this.$axios.post('/search/', { category: category, search_text: text })
@@ -355,8 +353,9 @@ export default {
           value: true
         }
 
-        this.getSuppliers()
+        this.getLocations()
         this.getStockCount()
+        this.getSuppliers()
       } catch (e) {
         this.alert = {
           msg: 'Error creating stock item.',
@@ -380,8 +379,9 @@ export default {
 
         this.items.splice(i, 1)
 
-        this.getSuppliers()
+        this.getLocations()
         this.getStockCount()
+        this.getSuppliers()
       } catch (e) {
         this.alert = {
           msg: 'Error deleting stock item.',
@@ -408,6 +408,8 @@ export default {
         this.items.splice(i, 1)
         this.items.push(data)
 
+        this.getLocations()
+        this.getStockCount()
         this.getSuppliers()
       } catch (e) {
         this.alert = {

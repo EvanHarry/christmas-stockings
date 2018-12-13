@@ -1,7 +1,6 @@
 <template>
   <v-layout justify-center>
     <v-flex
-      class="pr-1"
       hidden-sm-and-down
       md8
     >
@@ -13,6 +12,12 @@
           dense
         >
           <v-toolbar-title>Users</v-toolbar-title>
+          <v-spacer />
+          <new-item
+            :fields="fields"
+            :save-item="createItem"
+            title="User"
+          />
         </v-toolbar>
         <v-data-table
           :headers="headers"
@@ -63,6 +68,12 @@
           dense
         >
           <v-toolbar-title>Users</v-toolbar-title>
+          <v-spacer />
+          <new-item
+            :fields="fields"
+            :save-item="createItem"
+            title="User"
+          />
         </v-toolbar>
         <v-data-iterator
           :headers="headers"
@@ -126,7 +137,7 @@
             slot="pageText"
             slot-scope="props"
           >
-            User {{ props.pageStart }} of {{ props.itemsLength }}
+            {{ props.pageStart }} of {{ props.itemsLength }}
           </template>
         </v-data-iterator>
       </v-card>

@@ -3,16 +3,14 @@
     v-model="active"
     persistent
     width="400"
+    style="margin: -6px;"
   >
     <v-btn
       slot="activator"
-      :left="$vuetify.breakpoint.xsOnly"
-      :right="$vuetify.breakpoint.smAndUp"
-      :small="$vuetify.breakpoint.xsOnly"
-      bottom
-      color="purple darken-3 white--text"
-      fab
-      fixed
+      class="mx-0"
+      dark
+      flat
+      icon
     >
       <v-icon>add</v-icon>
     </v-btn>
