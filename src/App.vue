@@ -14,6 +14,7 @@
       <v-toolbar-items v-if="$vuetify.breakpoint.mdAndUp && loggedIn">
         <v-btn
           v-for="(item, i) in items"
+          :disabled="item.disabled || item.admin ? !admin : false"
           :icon="$vuetify.breakpoint.smAndDown"
           :key="i"
           flat
@@ -46,7 +47,7 @@
         <v-list>
           <v-list-tile
             v-for="(item, i) in items"
-            :disabled="item.disabled"
+            :disabled="item.disabled || item.admin ? !admin : false"
             :key="i"
             @click="$router.push(item.to)"
           >
@@ -79,7 +80,7 @@ export default {
   data () {
     return {
       items: [
-        { text: 'Home', icon: 'home', admin: true, to: '/' },
+        { text: 'Home', icon: 'home', admin: false, to: '/' },
         { text: 'Admin', icon: 'supervisor_account', admin: true, to: '/admin' }
       ]
     }
