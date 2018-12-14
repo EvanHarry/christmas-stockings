@@ -33,7 +33,7 @@
         </v-btn>
       </v-toolbar-items>
       <v-menu
-        v-if="$vuetify.breakpoint.smAndDown"
+        v-if="$vuetify.breakpoint.smAndDown && loggedIn"
         bottom
         left
         min-width="150"
