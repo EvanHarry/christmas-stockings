@@ -62,6 +62,14 @@
         class="mt-2"
         raised
       >
+        <v-toolbar
+          card
+          color="blue darken-3"
+          dark
+          dense
+        >
+          <v-toolbar-title>Results</v-toolbar-title>
+        </v-toolbar>
         <v-data-iterator
           :headers="headers"
           :items="items"

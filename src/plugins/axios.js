@@ -5,8 +5,8 @@ import axios from 'axios'
 import store from '@/store'
 
 // Axios plugin
-let host = process.env.FLASK_APP_API_HOST
-const dev = host !== undefined ? host : 'http://localhost:5000'
+let host = process.env.VUE_APP_API_HOST
+const dev = host !== undefined ? `http://${host}:5000` : 'http://localhost:5000'
 const production = 'https://evanharry.pythonanywhere.com'
 axios.defaults.baseURL = (process.env.NODE_ENV !== 'production') ? dev : production
 
