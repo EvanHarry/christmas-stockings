@@ -155,6 +155,16 @@
               <v-list-tile-sub-title>{{ guiVersion }}</v-list-tile-sub-title>
             </v-list-tile-content>
           </v-list-tile>
+          <v-divider />
+          <v-list-tile avatar>
+            <v-list-tile-avatar>
+              <v-icon color="grey darken-3">lock</v-icon>
+            </v-list-tile-avatar>
+            <v-list-tile-content>
+              <v-list-tile-title>Session Expires</v-list-tile-title>
+              <v-list-tile-sub-title>{{ sessionExpires }}</v-list-tile-sub-title>
+            </v-list-tile-content>
+          </v-list-tile>
         </v-list>
       </v-card>
     </v-flex>
@@ -191,6 +201,16 @@
               <v-list-tile-sub-title>{{ guiVersion }}</v-list-tile-sub-title>
             </v-list-tile-content>
           </v-list-tile>
+          <v-divider />
+          <v-list-tile avatar>
+            <v-list-tile-avatar>
+              <v-icon color="grey darken-3">lock</v-icon>
+            </v-list-tile-avatar>
+            <v-list-tile-content>
+              <v-list-tile-title>Session Expires</v-list-tile-title>
+              <v-list-tile-sub-title>{{ sessionExpires }}</v-list-tile-sub-title>
+            </v-list-tile-content>
+          </v-list-tile>
         </v-list>
       </v-card>
     </v-flex>
@@ -215,6 +235,7 @@
 <script>
 import { mapState } from 'vuex'
 
+import { getTokenHeader, prettifyExpirationDate } from '@/assets/auth'
 import EditItem from '@/components/EditItem'
 import NewItem from '@/components/NewItem'
 
@@ -247,7 +268,13 @@ export default {
       'apiVersion',
       'guiVersion',
       'user'
-    ])
+    ]),
+    sessionExpires () {
+      let token = localStorage.getItem('token')
+      let header = getTokenHeader(token)
+
+      return prettifyExpirationDate(header.exp)
+    }
   },
   mounted () {
     this.getUsers()
