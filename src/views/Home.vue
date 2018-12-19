@@ -212,12 +212,12 @@ export default {
   },
   methods: {
     async getLocations () {
-      const { data } = await this.$axios.get('/locations/')
+      const { data } = await this.$axios.get('/stock/locations/')
 
       this.locations = data
     },
     async getSuppliers () {
-      const { data } = await this.$axios.get('/suppliers/')
+      const { data } = await this.$axios.get('/stock/suppliers/')
 
       this.suppliers = data
     },
