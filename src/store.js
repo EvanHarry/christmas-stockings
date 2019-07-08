@@ -30,6 +30,8 @@ export default new Vuex.Store({
       state.user = user
     },
     logout (state) {
+      delete axios.defaults.headers.common['Authorization']
+
       state.user = null
     },
     setApiVersion (state, version) {

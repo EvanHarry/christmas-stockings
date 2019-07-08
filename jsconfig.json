@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [
+        "src/*"
+      ]
+    },
+    "sourceMap": false,
+    "target": "es2018",
+    "module": "commonjs"
+  },
+  "exclude": [
+    "node_modules"
+  ],
+}

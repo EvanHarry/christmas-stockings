@@ -68,10 +68,10 @@
       </v-btn>
     </v-snackbar>
     <v-footer
+      app
       class="justify-center"
       color="grey darken-3"
       dark
-      fixed
     >
       <span>Made by <strong>Evan Harry</strong></span>
     </v-footer>
