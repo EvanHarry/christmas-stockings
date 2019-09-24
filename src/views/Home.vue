@@ -43,6 +43,7 @@
             <td>{{ props.item.tidings_code }}</td>
             <td>{{ props.item.supplier }}</td>
             <td>{{ props.item.location }}</td>
+            <td>{{ getLastModified(props.item.last_modified) }}</td>
             <td class="align-center layout pr-1">
               <span>{{ props.item.quantity }}</span>
               <v-spacer />
@@ -195,6 +196,7 @@ export default {
         { text: 'Tidings Code', value: 'tidings_code', sortable: true, type: 'text' },
         { text: 'Supplier', value: 'supplier', sortable: true, type: 'select' },
         { text: 'Location', value: 'location', sortable: true, type: 'select' },
+        { text: 'Last Modified', value: 'last_modified', sortable: true, type: 'date' },
         { text: 'Quantity', value: 'quantity', sortable: true, type: 'text', width: 100 }
       ],
       items: [],
@@ -211,6 +213,21 @@ export default {
     this.getStockCount()
   },
   methods: {
+    getLastModified (str) {
+      const splitStr = str.split(' - ')
+      const dateStr = splitStr[0]
+      const splitDate = dateStr.split(/[-/]+/)
+
+      const day = parseInt(splitDate[0])
+      const month = parseInt(splitDate[1]) - 1
+      const year = parseInt(splitDate[2])
+
+      return new Date(year, month, day).toLocaleDateString('en-GB', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+      })
+    },
     async getLocations () {
       const { data } = await this.$axios.get('/stock/locations/')
 
